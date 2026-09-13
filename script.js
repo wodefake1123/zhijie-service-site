@@ -1,11 +1,9 @@
-const menuButton = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.nav');
-menuButton.addEventListener('click', () => {
-  const open = menuButton.getAttribute('aria-expanded') === 'true';
-  menuButton.setAttribute('aria-expanded', String(!open));
-  nav.classList.toggle('open', !open);
-});
-nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-  menuButton.setAttribute('aria-expanded', 'false'); nav.classList.remove('open');
-}));
-document.querySelector('#year').textContent = new Date().getFullYear();
+const menuButton=document.querySelector('.menu-toggle');const nav=document.querySelector('.nav');menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open',!open)});nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{menuButton.setAttribute('aria-expanded','false');nav.classList.remove('open')}));document.querySelector('#year').textContent=new Date().getFullYear();
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const modal=document.querySelector('#orderModal');const form=document.querySelector('#orderForm');const planSelect=document.querySelector('#orderPlan');const result=document.querySelector('#orderResult');const summary=document.querySelector('#orderSummary');const firstInput=document.querySelector('#customerName');
+function openOrder(plan){planSelect.value=[...planSelect.options].some(o=>o.value===plan)?plan:'待沟通方案';modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');setTimeout(()=>firstInput.focus(),80)}
+function closeOrder(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open')}
+document.querySelectorAll('.js-order').forEach(btn=>btn.addEventListener('click',()=>openOrder(btn.dataset.plan)));document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',closeOrder));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeOrder()});
+form.addEventListener('submit',e=>{e.preventDefault();const id='ZJ-'+new Date().toISOString().slice(0,10).replaceAll('-','')+'-'+String(Date.now()).slice(-4);const name=document.querySelector('#customerName').value.trim()||'未填写';const contact=document.querySelector('#customerContact').value.trim()||'未填写';const need=document.querySelector('#projectNeed').value.trim();const timeline=document.querySelector('#timeline').value;const budget=document.querySelector('#budget').value;summary.textContent=`知界信息技术服务工作室｜订单意向\n意向编号：${id}\n称呼：${name}\n联系方式：${contact}\n意向方案：${planSelect.value}\n期望时间：${timeline}\n预算范围：${budget}\n需求说明：${need}\n\n说明：此摘要仅用于前期沟通，不代表合同成立或已经付款。`;result.hidden=false;result.scrollIntoView({behavior:'smooth',block:'nearest'})});
+document.querySelector('#copyOrder').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(summary.textContent);showToast('已复制订单摘要')}catch{const range=document.createRange();range.selectNode(summary);getSelection().removeAllRanges();getSelection().addRange(range);showToast('请长按或右键复制摘要')}});
+function showToast(text){const toast=document.querySelector('#toast');toast.textContent=text;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)}

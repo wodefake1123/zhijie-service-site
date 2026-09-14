@@ -6,6 +6,8 @@
   <meta name="description" content="知界信息技术服务工作室提供 AI 自动化、办公自动化、数据处理、脚本与轻量工具开发服务。面向个体经营者和小团队，提供从需求梳理到交付支持的一站式技术服务。" />
   <meta name="keywords" content="知界信息技术服务工作室,AI自动化,办公自动化,数据处理,脚本开发,小工具开发" />
   <meta name="theme-color" content="#07090d" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-X4Fh3cT8fCk95U/4puiwqIk3hGlXNaJkJA/HWJlKbzo='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="知界信息技术服务工作室｜看见未知，打开更多世界" />
   <meta property="og:description" content="AI 自动化、办公自动化、数据处理与轻量工具开发。" />
@@ -22,7 +24,7 @@
   <header class="site-header">
     <a class="brand" href="#top" aria-label="知界信息技术服务工作室首页"><img src="assets/zhijie-logo-web.webp" alt="知界标志" /><span><b>知界</b><small>ZHIJIE STUDIO</small></span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">菜单</button>
-    <nav id="nav" class="nav" aria-label="主导航"><a href="#services">服务</a><a href="#cases">能力场景</a><a href="#plans">合作方案</a><a href="#about">关于</a><a href="#contact">联系</a><button class="nav-order js-order" type="button" data-plan="标准方案">开始合作</button></nav>
+    <nav id="nav" class="nav" aria-label="主导航"><a href="#services">服务</a><a href="#solutions">产品</a><a href="#cases">案例</a><a href="#plans">方案</a><a href="#process">流程</a><a href="#contact">联系</a><button class="nav-order js-order" type="button" data-plan="标准方案">开始合作</button></nav>
   </header>
   <main id="main">
     <section id="top" class="hero">
@@ -46,12 +48,27 @@
         <article class="service-card reveal"><div class="service-no">04</div><div class="service-symbol">&lt;/&gt;</div><h3>脚本与轻量工具</h3><p>围绕具体工作卡点开发专用脚本、桌面工具或网页小应用。</p><ul><li>定制脚本开发</li><li>轻量业务工具</li><li>现有流程衔接</li></ul></article>
       </div>
     </section>
+    <section id="solutions" class="section solutions">
+      <div class="section-head reveal"><div><p class="eyebrow"><span></span> SOLUTION CATALOG</p><h2>你买到的不只是一段代码，<br />而是一套可使用的解决方案。</h2></div><p>按常见业务场景拆分服务内容。点击分类查看适合谁、具体交付什么，以及通常需要多长时间。</p></div>
+      <div class="solution-shell reveal">
+        <div class="solution-tabs" role="tablist" aria-label="服务产品分类">
+          <button class="solution-tab active" type="button" role="tab" aria-selected="true" data-solution="office">办公提效</button>
+          <button class="solution-tab" type="button" role="tab" aria-selected="false" data-solution="data">数据应用</button>
+          <button class="solution-tab" type="button" role="tab" aria-selected="false" data-solution="ai">AI 工作流</button>
+          <button class="solution-tab" type="button" role="tab" aria-selected="false" data-solution="tool">专用工具</button>
+        </div>
+        <div class="solution-panel" id="solutionPanel" aria-live="polite">
+          <div class="solution-copy"><small id="solutionCode">01 / OFFICE EFFICIENCY</small><h3 id="solutionTitle">办公提效与批量处理</h3><p id="solutionDesc">适合每天反复整理文件、表格、文档或复制信息的个人与团队，把固定规则变成一键执行流程。</p><div class="solution-meta"><span><b>适合场景</b><i id="solutionFit">批量改名、表格合并、格式转换、文档生成</i></span><span><b>常见交付</b><i id="solutionDeliver">可运行工具、规则配置、使用说明、测试样例</i></span><span><b>参考周期</b><i id="solutionTime">3–7 个工作日</i></span></div><button class="button button-light js-solution-order" type="button" data-plan="基础方案">咨询这个方向 ↗</button></div>
+          <div class="solution-visual"><div class="visual-grid"></div><div class="flow-node node-a">INPUT<small>文件 / 表格 / 文档</small></div><div class="flow-line"></div><div class="flow-node node-b">PROCESS<small>规则执行与校验</small></div><div class="flow-node node-c">OUTPUT<small>标准化结果</small></div><span class="pulse-dot"></span></div>
+        </div>
+      </div>
+    </section>
     <section id="cases" class="section cases">
       <div class="section-head reveal"><div><p class="eyebrow"><span></span> CAPABILITY SCENARIOS</p><h2>把抽象需求，变成<br />看得见的解决路径。</h2></div><p>以下为工作室实际制作或搭建的功能界面截图；其中业务数据为演示数据，用于说明功能与应用方向。</p></div>
       <div class="case-grid">
-        <article class="case-card reveal"><div class="case-media"><img src="assets/case-office-automation.webp?v=20260914-2" alt="知界工具箱批量文件处理功能界面截图" loading="lazy" /><span>真实界面截图</span></div><div class="case-body"><small>WORKFLOW / 01</small><h3>批量文件处理工具</h3><p>将重命名、格式转换、内容提取和文件整理集中到清晰流程中，减少大量重复操作。</p><div class="case-tags"><b>批量处理</b><b>规则配置</b><b>进度反馈</b></div></div></article>
-        <article class="case-card reveal"><div class="case-media"><img src="assets/case-data-insight.webp?v=20260914-2" alt="知界数据门店销售分析看板功能界面截图" loading="lazy" /><span>真实界面截图</span></div><div class="case-body"><small>DATA / 02</small><h3>门店销售数据分析看板</h3><p>把多门店销售数据清洗、汇总并可视化，帮助快速查看趋势、品类结构和关键洞察。</p><div class="case-tags"><b>数据清洗</b><b>经营看板</b><b>趋势洞察</b></div></div></article>
-        <article class="case-card reveal"><div class="case-media"><img src="assets/case-custom-tools.webp?v=20260914-2" alt="客户资料整理与通知助手工作流真实截图" loading="lazy" /><span>真实工作流截图</span></div><div class="case-body"><small>AI WORKFLOW / 03</small><h3>客户资料整理与通知助手</h3><p>自动获取、清洗和整理客户资料，生成标准化文件，并将处理结果按流程推送到指定渠道。</p><div class="case-tags"><b>资料整理</b><b>AI 结构化</b><b>自动通知</b></div></div></article>
+        <article class="case-card reveal"><button class="case-media js-lightbox" type="button" data-src="assets/case-office-automation.webp?v=20260914-3" data-caption="知界工具箱｜批量文件处理功能界面"><img src="assets/case-office-automation.webp?v=20260914-3" alt="知界工具箱批量文件处理功能界面截图" loading="lazy" /><span>真实界面 · 点击查看</span></button><div class="case-body"><small>WORKFLOW / 01</small><h3>批量文件处理工具</h3><p>将重命名、格式转换、内容提取和文件整理集中到清晰流程中，减少大量重复操作。</p><div class="case-tags"><b>批量处理</b><b>规则配置</b><b>进度反馈</b></div></div></article>
+        <article class="case-card reveal"><button class="case-media js-lightbox" type="button" data-src="assets/case-data-insight.webp?v=20260914-3" data-caption="知界数据｜门店销售分析看板"><img src="assets/case-data-insight.webp?v=20260914-3" alt="知界数据门店销售分析看板功能界面截图" loading="lazy" /><span>真实界面 · 点击查看</span></button><div class="case-body"><small>DATA / 02</small><h3>门店销售数据分析看板</h3><p>把多门店销售数据清洗、汇总并可视化，帮助快速查看趋势、品类结构和关键洞察。</p><div class="case-tags"><b>数据清洗</b><b>经营看板</b><b>趋势洞察</b></div></div></article>
+        <article class="case-card reveal"><button class="case-media js-lightbox" type="button" data-src="assets/case-custom-tools.webp?v=20260914-3" data-caption="客户资料整理与通知助手｜自动化工作流"><img src="assets/case-custom-tools.webp?v=20260914-3" alt="客户资料整理与通知助手工作流真实截图" loading="lazy" /><span>真实工作流 · 点击查看</span></button><div class="case-body"><small>AI WORKFLOW / 03</small><h3>客户资料整理与通知助手</h3><p>自动获取、清洗和整理客户资料，生成标准化文件，并将处理结果按流程推送到指定渠道。</p><div class="case-tags"><b>资料整理</b><b>AI 结构化</b><b>自动通知</b></div></div></article>
       </div>
     </section>
     <section id="plans" class="section plans">
@@ -62,6 +79,34 @@
         <article class="plan reveal"><small>CUSTOM</small><h3>定制方案</h3><p class="price"><b>¥1500</b> 起</p><p>适合多环节、需集成或希望长期演进的项目。</p><ul><li>完整需求拆解</li><li>个性化方案与开发</li><li>交付培训与文档</li><li>可选长期维护</li></ul><button class="button button-outline js-order" type="button" data-plan="定制方案">沟通定制方案</button></article>
       </div>
       <p class="price-note">最终报价以确认后的需求范围为准；如需求不适合实施，会在合作前如实说明。</p>
+    </section>
+    <section class="section estimator">
+      <div class="estimator-copy reveal"><p class="eyebrow"><span></span> QUICK ESTIMATE</p><h2>用一分钟，先了解项目大致范围。</h2><p>这是前期判断工具，不会替代正式报价。选择需求类型和复杂程度，页面会给出可参考的方案、周期与价格区间。</p><div class="estimate-result" aria-live="polite"><small>初步建议</small><strong id="estimatePlan">标准方案</strong><b id="estimatePrice">¥800–1,500</b><span id="estimateTime">预计 5–10 个工作日</span></div></div>
+      <div class="estimate-form reveal">
+        <label>我主要需要解决<select id="estimateType"><option value="office">办公流程与批量处理</option><option value="data">数据清洗、分析或看板</option><option value="ai">AI 信息处理与自动化</option><option value="tool">脚本、网页或专用小工具</option></select></label>
+        <label>流程复杂程度<select id="estimateComplexity"><option value="simple">单一步骤，规则明确</option><option value="medium" selected>多个步骤，需要配置</option><option value="complex">多系统衔接或长期使用</option></select></label>
+        <label>是否需要界面<select id="estimateUI"><option value="no">不需要，能运行即可</option><option value="yes" selected>需要简洁操作界面</option><option value="advanced">需要完整管理界面</option></select></label>
+        <button class="button button-light js-estimate-order" type="button">带着估算结果咨询 ↗</button><p>实际报价取决于数据量、接口条件、部署方式和修改范围。</p>
+      </div>
+    </section>
+    <section id="process" class="section process">
+      <div class="section-head reveal"><div><p class="eyebrow dark"><span></span> DELIVERY PROCESS</p><h2>每一步都清楚，<br />每一阶段都能确认。</h2></div><p>采用分阶段推进，先把目标说清楚，再制作、测试和交付，降低双方对结果理解不一致的风险。</p></div>
+      <div class="process-track">
+        <article class="process-step reveal"><small>STEP 01</small><b>需求诊断</b><p>了解当前做法、输入资料、使用人员和期望结果，判断是否值得自动化。</p><span>输出：需求摘要</span></article>
+        <article class="process-step reveal"><small>STEP 02</small><b>方案与报价</b><p>明确功能边界、交付形式、周期、价格、修改范围和验收方法。</p><span>输出：确认方案</span></article>
+        <article class="process-step reveal"><small>STEP 03</small><b>制作与演示</b><p>按确认范围实现核心功能，提供阶段演示，及时校正关键细节。</p><span>输出：可用版本</span></article>
+        <article class="process-step reveal"><small>STEP 04</small><b>测试与交付</b><p>使用样例和实际场景测试，交付工具、使用说明与约定范围内的支持。</p><span>输出：正式交付</span></article>
+      </div>
+    </section>
+    <section class="section faq">
+      <div class="faq-title reveal"><p class="eyebrow"><span></span> FAQ</p><h2>合作前常见问题</h2><p>如果你的情况不在这里，直接通过微信发送一段现有流程说明即可。</p></div>
+      <div class="faq-list reveal">
+        <details><summary>我不懂技术，能不能把需求说清楚？<i>＋</i></summary><p>可以。你只需要说明“现在怎么做、哪里最费时间、希望变成什么样”，技术方案由工作室评估并翻译成清楚的交付范围。</p></details>
+        <details><summary>页面上的起步价是否就是最终价格？<i>＋</i></summary><p>不是。起步价用于判断常见项目量级，最终价格会根据功能数量、数据量、接口条件、部署方式、交付周期和修改范围确认。</p></details>
+        <details><summary>哪些需求不建议立即开发？<i>＋</i></summary><p>规则尚未稳定、输入资料长期不一致，或依赖没有开放接口的平台时，通常建议先梳理流程或做小范围验证，再决定是否完整开发。</p></details>
+        <details><summary>交付后我能自己使用吗？<i>＋</i></summary><p>会提供约定范围内的使用说明、测试样例或操作指导。需要长期维护、多人协作或持续更新的项目，可单独约定支持方式。</p></details>
+        <details><summary>现在可以在官网直接付款吗？<i>＋</i></summary><p>目前先提交需求并确认范围；PayPal 官方支付入口接通后，会跳转到 PayPal 安全结账页面。本站不会自行收集银行卡信息。</p></details>
+      </div>
     </section>
     <section id="about" class="section about">
       <div class="about-logo reveal"><img src="assets/zhijie-logo-web.webp" alt="知界品牌标志" /></div>
@@ -79,7 +124,7 @@
       <form id="orderForm">
         <label>意向方案<select id="orderPlan" name="plan"><option>基础方案</option><option selected>标准方案</option><option>定制方案</option><option>待沟通方案</option></select></label>
         <label>怎么称呼你<input id="customerName" name="name" type="text" maxlength="30" placeholder="例如：王先生 / 李女士" /></label>
-        <label>联系方式（选填）<input id="customerContact" name="contact" type="text" maxlength="60" placeholder="微信号或其他方便联系的方式" /></label>
+        <label>联系方式（选填）<input id="customerContact" name="contact" type="text" maxlength="60" autocomplete="off" placeholder="微信号或其他方便联系的方式" /></label>
         <label class="full">你想解决什么问题<textarea id="projectNeed" name="need" rows="5" maxlength="600" required placeholder="例如：每周需要整理多份 Excel，希望自动合并、检查并生成汇总表……"></textarea></label>
         <label>期望时间<select id="timeline" name="timeline"><option>先沟通评估</option><option>一周内</option><option>两周内</option><option>一个月内</option><option>时间灵活</option></select></label>
         <label>预算范围<select id="budget" name="budget"><option>先沟通评估</option><option>¥300–800</option><option>¥800–1500</option><option>¥1500–3000</option><option>¥3000 以上</option></select></label>
@@ -89,6 +134,8 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite">已复制订单摘要</div>
-  <script src="script.js"></script>
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="案例大图"><button type="button" class="lightbox-close" aria-label="关闭大图">×</button><img id="lightboxImage" alt="" /><p id="lightboxCaption"></p></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <script src="script.js?v=20260914-3"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
   <meta name="keywords" content="知界信息技术服务工作室,AI自动化,办公自动化,数据处理,脚本开发,小工具开发" />
   <meta name="theme-color" content="#07090d" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-X4Fh3cT8fCk95U/4puiwqIk3hGlXNaJkJA/HWJlKbzo='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-X4Fh3cT8fCk95U/4puiwqIk3hGlXNaJkJA/HWJlKbzo='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://zhijie-orders.zhijie-orders-backend.workers.dev; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="知界信息技术服务工作室｜看见未知，打开更多世界" />
   <meta property="og:description" content="AI 自动化、办公自动化、数据处理与轻量工具开发。" />
@@ -128,9 +128,9 @@
         <label class="full">你想解决什么问题<textarea id="projectNeed" name="need" rows="5" maxlength="600" required placeholder="例如：每周需要整理多份 Excel，希望自动合并、检查并生成汇总表……"></textarea></label>
         <label>期望时间<select id="timeline" name="timeline"><option>先沟通评估</option><option>一周内</option><option>两周内</option><option>一个月内</option><option>时间灵活</option></select></label>
         <label>预算范围<select id="budget" name="budget"><option>先沟通评估</option><option>¥300–800</option><option>¥800–1500</option><option>¥1500–3000</option><option>¥3000 以上</option></select></label>
-        <div class="full form-actions"><button class="button button-dark" type="submit">生成订单意向摘要</button><small>此步骤不会产生扣款或合同关系。</small></div>
+        <div class="full form-actions"><button class="button button-dark" id="submitOrder" type="submit">提交需求并生成订单编号</button><small>需求会安全保存到工作室订单后台；此步骤不会扣款或形成合同。</small></div>
       </form>
-      <div class="order-result" id="orderResult" hidden><div><h3>订单意向摘要</h3><button type="button" id="copyOrder">复制摘要</button></div><pre id="orderSummary"></pre><p>复制后，用微信扫描二维码并发送给工作室。</p><img src="assets/wechat-qr-card.png" alt="工作室微信二维码" /></div>
+      <div class="order-result" id="orderResult" hidden><div><h3>需求提交结果</h3><button type="button" id="copyOrder">复制摘要</button></div><pre id="orderSummary"></pre><p id="orderHint">复制后，也可以用微信扫描二维码并发送给工作室，方便及时沟通。</p><img src="assets/wechat-qr-card.png" alt="工作室微信二维码" /></div>
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite">已复制订单摘要</div>

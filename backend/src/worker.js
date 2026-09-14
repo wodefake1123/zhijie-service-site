@@ -29,6 +29,11 @@ export default {
 async function createOrder(request, env) {
   assertAllowedOrigin(request, env);
   assertJson(request);
+  const fingerprint = await sha256(request.headers.get('CF-Connecting-IP') || 'unknown');
+  const rateNow = Date.now();
+  const rateRow = await env.DB.prepare('SELECT window_started_at, submissions FROM submission_limits WHERE fingerprint = ?').bind(fingerprint).first();
+  const rateActive = rateRow && rateNow - rateRow.window_started_at < 15 * 60 * 1000;
+  if (rateActive && rateRow.submissions >= 10) return json(request, env, { error: '提交过于频繁，请稍后再试' }, 429);
   const body = await readJson(request, 5000);
   const customerName = clean(body.customerName, 30, true);
   const contact = clean(body.contact, 60, true);
@@ -41,6 +46,9 @@ async function createOrder(request, env) {
   const id = crypto.randomUUID();
   await env.DB.prepare('INSERT INTO orders (id, created_at, updated_at, customer_name, contact, plan, timeline, budget, need) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
     .bind(id, now, now, customerName || '未填写', contact || '未填写', plan, timeline, budget, need).run();
+  const rateStart = rateActive ? rateRow.window_started_at : rateNow;
+  const rateCount = rateActive ? rateRow.submissions + 1 : 1;
+  await env.DB.prepare('INSERT INTO submission_limits (fingerprint, window_started_at, submissions) VALUES (?, ?, ?) ON CONFLICT(fingerprint) DO UPDATE SET window_started_at = excluded.window_started_at, submissions = excluded.submissions').bind(fingerprint, rateStart, rateCount).run();
   return json(request, env, { id, createdAt: now, status: 'new' }, 201);
 }
 

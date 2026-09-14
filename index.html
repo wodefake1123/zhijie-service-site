@@ -7,7 +7,7 @@
   <meta name="keywords" content="知界信息技术服务工作室,AI自动化,办公自动化,数据处理,脚本开发,小工具开发" />
   <meta name="theme-color" content="#07090d" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-X4Fh3cT8fCk95U/4puiwqIk3hGlXNaJkJA/HWJlKbzo='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://zhijie-orders.zhijie-orders-backend.workers.dev; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com 'sha256-X4Fh3cT8fCk95U/4puiwqIk3hGlXNaJkJA/HWJlKbzo='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://zhijie-orders.zhijie-orders-backend.workers.dev https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="知界信息技术服务工作室｜看见未知，打开更多世界" />
   <meta property="og:description" content="AI 自动化、办公自动化、数据处理与轻量工具开发。" />
@@ -120,7 +120,7 @@
   </main>
   <footer><div class="footer-brand"><img src="assets/zhijie-logo-web.webp" alt="" /><div><b>知界信息技术服务工作室</b><small>看见未知 · 打开更多世界</small></div></div><div class="footer-links"><a href="#services">服务</a><a href="#plans">方案</a><a href="#contact">联系</a><a href="#top">回到顶部 ↑</a></div><p>© <span id="year"></span> 知界信息技术服务工作室</p></footer>
   <div class="modal" id="orderModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
-    <div class="modal-backdrop" data-close></div><div class="modal-panel"><button class="modal-close" type="button" data-close aria-label="关闭">×</button><p class="eyebrow dark"><span></span> PROJECT BRIEF</p><h2 id="orderTitle">提交合作需求</h2><p class="modal-intro">填写后会在本机生成一段订单意向摘要，不会上传或保存你的资料。复制摘要后扫码发送给工作室即可。</p>
+    <div class="modal-backdrop" data-close></div><div class="modal-panel"><button class="modal-close" type="button" data-close aria-label="关闭">×</button><p class="eyebrow dark"><span></span> PROJECT BRIEF</p><h2 id="orderTitle">提交合作需求</h2><p class="modal-intro">填写后，需求会通过安全验证并保存到工作室订单后台，便于后续沟通和跟进；此步骤不会扣款或形成合同。</p>
       <form id="orderForm">
         <label>意向方案<select id="orderPlan" name="plan"><option>基础方案</option><option selected>标准方案</option><option>定制方案</option><option>待沟通方案</option></select></label>
         <label>怎么称呼你<input id="customerName" name="name" type="text" maxlength="30" placeholder="例如：王先生 / 李女士" /></label>
@@ -128,6 +128,7 @@
         <label class="full">你想解决什么问题<textarea id="projectNeed" name="need" rows="5" maxlength="600" required placeholder="例如：每周需要整理多份 Excel，希望自动合并、检查并生成汇总表……"></textarea></label>
         <label>期望时间<select id="timeline" name="timeline"><option>先沟通评估</option><option>一周内</option><option>两周内</option><option>一个月内</option><option>时间灵活</option></select></label>
         <label>预算范围<select id="budget" name="budget"><option>先沟通评估</option><option>¥300–800</option><option>¥800–1500</option><option>¥1500–3000</option><option>¥3000 以上</option></select></label>
+        <div class="full turnstile-row"><div id="turnstileWidget" aria-label="Cloudflare 安全验证"></div><small id="turnstileStatus" role="status" aria-live="polite">正在准备安全验证…</small></div>
         <div class="full form-actions"><button class="button button-dark" id="submitOrder" type="submit">提交需求并生成订单编号</button><small>需求会安全保存到工作室订单后台；此步骤不会扣款或形成合同。</small></div>
       </form>
       <div class="order-result" id="orderResult" hidden><div><h3>需求提交结果</h3><button type="button" id="copyOrder">复制摘要</button></div><pre id="orderSummary"></pre><p id="orderHint">复制后，也可以用微信扫描二维码并发送给工作室，方便及时沟通。</p><img src="assets/wechat-qr-card.png" alt="工作室微信二维码" /></div>
@@ -136,6 +137,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite">已复制订单摘要</div>
   <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="案例大图"><button type="button" class="lightbox-close" aria-label="关闭大图">×</button><img id="lightboxImage" alt="" /><p id="lightboxCaption"></p></div>
   <div class="cursor-glow" aria-hidden="true"></div>
-  <script src="script.js?v=20260914-5"></script>
+  <script src="script.js?v=20260914-7"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileReady&amp;render=explicit" async defer></script>
 </body>
 </html>

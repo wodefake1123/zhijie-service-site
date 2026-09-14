@@ -35,6 +35,8 @@ async function createOrder(request, env) {
   const rateActive = rateRow && rateNow - rateRow.window_started_at < 15 * 60 * 1000;
   if (rateActive && rateRow.submissions >= 10) return json(request, env, { error: '提交过于频繁，请稍后再试' }, 429);
   const body = await readJson(request, 5000);
+  const turnstileToken = clean(body.turnstileToken, 2048);
+  await verifyTurnstile(turnstileToken, request, env);
   const customerName = clean(body.customerName, 30, true);
   const contact = clean(body.contact, 60, true);
   const need = clean(body.need, 600);
@@ -50,6 +52,24 @@ async function createOrder(request, env) {
   const rateCount = rateActive ? rateRow.submissions + 1 : 1;
   await env.DB.prepare('INSERT INTO submission_limits (fingerprint, window_started_at, submissions) VALUES (?, ?, ?) ON CONFLICT(fingerprint) DO UPDATE SET window_started_at = excluded.window_started_at, submissions = excluded.submissions').bind(fingerprint, rateStart, rateCount).run();
   return json(request, env, { id, createdAt: now, status: 'new' }, 201);
+}
+
+async function verifyTurnstile(token, request, env) {
+  if (!env.TURNSTILE_SECRET) throw new HttpError(503, '安全验证暂不可用，请稍后再试');
+  const form = new FormData();
+  form.set('secret', env.TURNSTILE_SECRET);
+  form.set('response', token);
+  form.set('remoteip', request.headers.get('CF-Connecting-IP') || '');
+  form.set('idempotency_key', crypto.randomUUID());
+  let verification;
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form });
+    verification = await response.json();
+  } catch {
+    throw new HttpError(503, '安全验证暂不可用，请稍后再试');
+  }
+  const validHostname = verification.hostname === 'www.yidianqibu.online' || verification.hostname === 'yidianqibu.online';
+  if (!verification.success || !validHostname || verification.action !== 'submit_order') throw new HttpError(403, '安全验证未通过，请刷新后重试');
 }
 
 async function login(request, env) {

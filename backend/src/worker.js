@@ -11,12 +11,12 @@ export default {
       if (url.pathname === '/admin' && request.method === 'GET') return new Response(ADMIN_HTML, { headers: htmlHeaders() });
       if (url.pathname === '/admin.js' && request.method === 'GET') return new Response(ADMIN_JS, { headers: { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
       if (url.pathname === '/api/health' && request.method === 'GET') return json(request, env, { ok: true });
-      if (url.pathname === '/api/orders' && request.method === 'POST') return createOrder(request, env);
-      if (url.pathname === '/api/admin/login' && request.method === 'POST') return login(request, env);
-      if (url.pathname === '/api/admin/logout' && request.method === 'POST') return logout(request, env);
-      if (url.pathname === '/api/admin/orders' && request.method === 'GET') return listOrders(request, env, url);
+      if (url.pathname === '/api/orders' && request.method === 'POST') return await createOrder(request, env);
+      if (url.pathname === '/api/admin/login' && request.method === 'POST') return await login(request, env);
+      if (url.pathname === '/api/admin/logout' && request.method === 'POST') return await logout(request, env);
+      if (url.pathname === '/api/admin/orders' && request.method === 'GET') return await listOrders(request, env, url);
       const match = url.pathname.match(/^\/api\/admin\/orders\/([0-9a-f-]{36})$/i);
-      if (match && request.method === 'PATCH') return updateOrder(request, env, match[1]);
+      if (match && request.method === 'PATCH') return await updateOrder(request, env, match[1]);
       return json(request, env, { error: 'Not found' }, 404);
     } catch (error) {
       if (Number.isInteger(error?.status) && error.status >= 400 && error.status < 500) return json(request, env, { error: error.message }, error.status);
@@ -35,7 +35,8 @@ async function createOrder(request, env) {
   const rateActive = rateRow && rateNow - rateRow.window_started_at < 15 * 60 * 1000;
   if (rateActive && rateRow.submissions >= 10) return json(request, env, { error: '提交过于频繁，请稍后再试' }, 429);
   const body = await readJson(request, 5000);
-  const turnstileToken = clean(body.turnstileToken, 2048);
+  const turnstileToken = clean(body.turnstileToken, 2048, true);
+  if (!turnstileToken) throw new HttpError(403, '请先完成安全验证');
   await verifyTurnstile(turnstileToken, request, env);
   const customerName = clean(body.customerName, 30, true);
   const contact = clean(body.contact, 60, true);

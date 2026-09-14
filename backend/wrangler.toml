@@ -1,0 +1,13 @@
+name = "zhijie-orders"
+main = "src/worker.js"
+compatibility_date = "2026-09-14"
+workers_dev = true
+
+[vars]
+PUBLIC_ORIGIN = "https://www.yidianqibu.online"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zhijie-orders"
+database_id = "6cadae91-bcfd-49f9-8e5b-e7b8be0dc19c"
+migrations_dir = "migrations"

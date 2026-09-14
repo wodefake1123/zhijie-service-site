@@ -1,0 +1,14 @@
+{
+  "name": "zhijie-orders-backend",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply zhijie-orders --local",
+    "db:remote": "wrangler d1 migrations apply zhijie-orders --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.34.0"
+  }
+}

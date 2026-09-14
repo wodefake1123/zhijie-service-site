@@ -2,3 +2,8 @@ design-concept.png
 desktop-preview.png
 desktop-preview-new.png
 mobile-preview-new.png
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.*

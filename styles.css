@@ -494,6 +494,163 @@ textarea {
   border-radius: 99px;
   padding: 5px 9px;
 }
+.zhiflow {
+  background: radial-gradient(circle at 82% 16%, rgba(42, 106, 176, 0.16), transparent 32%), #0b111a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f3f7fc;
+}
+.zhiflow-heading {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: end;
+  gap: clamp(28px, 6vw, 90px);
+  margin-bottom: 48px;
+}
+.zhiflow-heading h2 {
+  font-size: clamp(38px, 4.5vw, 68px);
+  line-height: 1.16;
+  margin: 16px 0 0;
+}
+.zhiflow-heading h2 em {
+  font-style: normal;
+  color: #95c7ff;
+}
+.zhiflow-heading > p,
+.zhiflow-details > p,
+.zhiflow-proof-copy p {
+  color: #a3b1c3;
+  font-size: 14px;
+  line-height: 1.85;
+}
+.zhiflow-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.zhiflow-visual,
+.zhiflow-details,
+.zhiflow-proof {
+  border: 1px solid rgba(159, 194, 231, 0.16);
+  border-radius: 25px;
+  background: #121b29;
+}
+.zhiflow-visual {
+  min-width: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.zhiflow-screenshot,
+.zhiflow-proof-image {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 17px;
+  overflow: hidden;
+  position: relative;
+  cursor: zoom-in;
+  background: #e8eef6;
+  text-align: left;
+}
+.zhiflow-screenshot img,
+.zhiflow-proof-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 0.45s ease;
+}
+.zhiflow-screenshot:hover img,
+.zhiflow-proof-image:hover img {
+  transform: scale(1.02);
+}
+.zhiflow-screenshot { aspect-ratio: 1.58; }
+.zhiflow-proof-image { aspect-ratio: 1.6; }
+.zhiflow-screenshot span,
+.zhiflow-proof-image span {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  color: #fff;
+  background: rgba(11, 20, 33, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 99px;
+  padding: 7px 11px;
+  font-size: 11px;
+}
+.zhiflow-image-note {
+  color: #8fa0b6;
+  font-size: 11px;
+  margin: 13px 8px 2px;
+}
+.zhiflow-details {
+  padding: clamp(24px, 3vw, 44px);
+}
+.zhiflow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #9bc9fa;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.zhiflow-pulse {
+  width: 8px;
+  height: 8px;
+  background: #6fd6ae;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(111, 214, 174, 0.6);
+}
+.zhiflow-details h3 {
+  font-size: clamp(28px, 2.7vw, 39px);
+  line-height: 1.26;
+  margin: 20px 0 15px;
+}
+.zhiflow-steps {
+  margin: 30px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+.zhiflow-steps > div {
+  display: flex;
+  gap: 19px;
+  align-items: start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  padding: 13px 0;
+}
+.zhiflow-steps b {
+  color: #7fb8f5;
+  font-size: 11px;
+  padding-top: 3px;
+}
+.zhiflow-steps span { font-size: 14px; font-weight: 700; }
+.zhiflow-steps small { display: block; font-size: 11px; font-weight: 400; color: #8fa0b6; margin-top: 3px; }
+.zhiflow-actions { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.zhiflow-text-link { color: #b6d8fa; font-size: 12px; }
+.zhiflow-proof {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.7fr) minmax(0, 1.3fr);
+  gap: 30px;
+  padding: clamp(20px, 3vw, 35px);
+  margin-top: 20px;
+  align-items: center;
+}
+.zhiflow-proof-copy small { color: #81b9f2; font-size: 10px; letter-spacing: 0.14em; }
+.zhiflow-proof-copy h3 { font-size: clamp(24px, 2.5vw, 36px); line-height: 1.25; margin: 15px 0; }
+@media (max-width: 980px) {
+  .zhiflow-heading,
+  .zhiflow-layout,
+  .zhiflow-proof { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .zhiflow { padding-left: 22px; padding-right: 22px; }
+  .zhiflow-heading { margin-bottom: 28px; }
+  .zhiflow-screenshot { aspect-ratio: 1.2; }
+  .zhiflow-proof-image { aspect-ratio: 1.3; }
+  .zhiflow-proof { gap: 20px; }
+}
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

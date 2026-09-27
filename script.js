@@ -40,6 +40,7 @@ function openOrder(plan) {
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  loadTurnstile();
   setTimeout(() => firstInput.focus(), 80);
 }
 function closeOrder() {
@@ -64,6 +65,24 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAEzkn5xVLHLN5K76";
 let turnstileWidgetId = null;
 let turnstileToken = "";
 const turnstileStatus = document.querySelector("#turnstileStatus");
+let turnstileLoadStarted = false;
+function loadTurnstile() {
+  if (window.turnstile) {
+    window.onTurnstileReady();
+    return;
+  }
+  if (turnstileLoadStarted) return;
+  turnstileLoadStarted = true;
+  const script = document.createElement("script");
+  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileReady&render=explicit";
+  script.async = true;
+  script.onerror = () => {
+    turnstileLoadStarted = false;
+    turnstileStatus.textContent = "安全验证加载失败，请刷新后重试";
+    script.remove();
+  };
+  document.head.appendChild(script);
+}
 window.onTurnstileReady = () => {
   if (turnstileWidgetId !== null || !window.turnstile) return;
   turnstileWidgetId = window.turnstile.render("#turnstileWidget", {
@@ -85,6 +104,7 @@ window.onTurnstileReady = () => {
       turnstileStatus.textContent = "安全验证加载失败，请刷新后重试";
     },
   });
+  turnstileStatus.textContent = "请完成安全验证";
 };
 form.addEventListener("submit", async (e) => {
   e.preventDefault();

@@ -101,6 +101,16 @@ textarea {
 .nav > a:hover {
   color: #fff;
 }
+.nav > .nav-chat {
+  color: #e2efff;
+  white-space: nowrap;
+}
+.nav-chat:focus-visible,
+.hero-actions .button:focus-visible,
+.mobile-action a:focus-visible {
+  outline: 2px solid #99c6ef;
+  outline-offset: 3px;
+}
 .nav-order {
   border: 1px solid #bfc8d4;
   background: #f5f7fa;
@@ -109,6 +119,9 @@ textarea {
   padding: 10px 19px;
   font-weight: 700;
   cursor: pointer;
+}
+@media (min-width: 981px) and (max-width: 1450px) {
+  .nav { gap: clamp(10px, 1.6vw, 24px); }
 }
 .menu-toggle {
   display: none;

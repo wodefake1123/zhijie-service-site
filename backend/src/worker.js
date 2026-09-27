@@ -205,7 +205,7 @@ async function chatWithCoze(request, env) {
   const body = await readJson(request, 2500);
   const message = clean(body.message, 800, true);
   const sessionId = clean(body.sessionId, 64, true);
-  const conversationId = clean(body.conversationId, 32);
+  const conversationId = clean(body.conversationId, 32, true);
   if (message.length < 1) throw new HttpError(400, "请输入问题后再发送");
   if (!/^[a-f0-9-]{36}$/i.test(sessionId))
     throw new HttpError(400, "咨询会话已失效，请刷新页面后重试");

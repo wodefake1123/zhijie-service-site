@@ -1,10 +1,12 @@
 (() => {
   const root = document.querySelector("#aiChat");
+  const panel = document.querySelector("#aiChatPanel");
+  const launcher = document.querySelector("[data-ai-chat-launcher]");
   const form = document.querySelector("#aiChatForm");
   const input = document.querySelector("#aiChatInput");
   const messages = document.querySelector("#aiChatMessages");
   const status = document.querySelector("#aiChatStatus");
-  if (!root || !form || !input || !messages || !status) return;
+  if (!root || !panel || !launcher || !form || !input || !messages || !status) return;
 
   const sessionKey = "zhijieAiSession";
   const conversationKey = "zhijieAiConversation";
@@ -18,15 +20,16 @@
 
   function openChat(event) {
     event?.preventDefault();
-    root.hidden = false;
-    root.setAttribute("aria-hidden", "false");
-    document.body.classList.add("ai-chat-open");
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+    launcher.setAttribute("aria-expanded", "true");
     input.focus();
   }
   function closeChat() {
-    root.hidden = true;
-    root.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("ai-chat-open");
+    panel.hidden = true;
+    panel.setAttribute("aria-hidden", "true");
+    launcher.setAttribute("aria-expanded", "false");
+    launcher.focus();
   }
   function addMessage(text, who, pending = false) {
     const bubble = document.createElement("p");
@@ -37,14 +40,12 @@
     return bubble;
   }
 
-  document.querySelectorAll("[data-open-ai-chat]").forEach((button) =>
-    button.addEventListener("click", openChat),
-  );
-  root.querySelectorAll("[data-close-ai-chat]").forEach((button) =>
+  launcher.addEventListener("click", openChat);
+  panel.querySelectorAll("[data-close-ai-chat]").forEach((button) =>
     button.addEventListener("click", closeChat),
   );
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !root.hidden) closeChat();
+    if (event.key === "Escape" && !panel.hidden) closeChat();
   });
 
   form.addEventListener("submit", async (event) => {
@@ -88,7 +89,7 @@
       sending = false;
       input.disabled = false;
       form.querySelector("button").disabled = false;
-      input.focus();
+      if (!panel.hidden) input.focus();
     }
   });
 })();

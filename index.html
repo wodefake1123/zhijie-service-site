@@ -34,7 +34,7 @@
     <link rel="canonical" href="https://www.yidianqibu.online/" />
     <link rel="icon" href="assets/zhijie-logo.png" />
     <title>知界 ZHIJIE｜把重复工作，交给 AI</title>
-    <link rel="stylesheet" href="styles.css?v=20260927-4" />
+    <link rel="stylesheet" href="styles.css?v=20260927-5" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -68,8 +68,7 @@
         <a href="#services">能帮你做什么</a><a href="#cases">演示案例</a
         ><a href="#process">怎么合作</a><a href="#faq">常见问题</a
         ><a href="#contact">联系</a
-        ><a class="nav-chat" href="#aiChat" data-open-ai-chat aria-label="在官网打开 AI 咨询">在线咨询 ↗</a
-        ><button class="nav-order js-order" type="button" data-plan="待沟通方案">
+          ><button class="nav-order js-order" type="button" data-plan="待沟通方案">
           免费判断
         </button>
       </nav>
@@ -92,19 +91,19 @@
               data-plan="待沟通方案"
             >
               免费判断我的业务能不能用 AI <span>↗</span></button
-            ><button class="button button-ghost" type="button" data-open-ai-chat>在线咨询 AI 助手 ↗</button>
+            ><a class="button button-ghost" href="#cases">看看演示案例 <span>↓</span></a>
           </div>
           <div class="trust-row">
             <span>先判断是否值得做</span><span>不用懂技术</span><span>确认方案后再实施</span>
           </div>
         </div>
         <div class="hero-brand reveal">
-          <div class="hero-note">
-            <small>从这些工作开始</small>
-            <div><span>01</span><b>公司资料，随时能问</b></div>
-            <div><span>02</span><b>重复录入，按规则处理</b></div>
-            <div><span>03</span><b>常见咨询，先接住客户</b></div>
-            <p>先用脱敏样例判断可行性，再讨论接入和实施。</p>
+          <figure class="hero-visual">
+            <img src="assets/zhijie-hero-studio.webp" alt="深色玻璃与银蓝色光线构成的抽象工作流程视觉" fetchpriority="high" />
+            <figcaption><span>从一件重复的小事开始</span><b>看清流程 · 找到值得交给 AI 的一步</b></figcaption>
+          </figure>
+          <div class="hero-capabilities" aria-label="知界重点服务">
+            <span>资料随时可问</span><i aria-hidden="true"></i><span>重复工作自动处理</span><i aria-hidden="true"></i><span>客户咨询先接住</span>
           </div>
         </div>
       </section>
@@ -581,9 +580,8 @@
       ><img id="lightboxImage" alt="" />
       <p id="lightboxCaption"></p>
     </div>
-    <section class="ai-chat" id="aiChat" aria-hidden="true" hidden>
-      <button class="ai-chat-backdrop" type="button" data-close-ai-chat aria-label="关闭 AI 咨询"></button>
-      <div class="ai-chat-panel" role="dialog" aria-modal="true" aria-labelledby="aiChatTitle">
+    <section class="ai-chat" id="aiChat" aria-label="知界 AI 在线咨询">
+      <div class="ai-chat-panel" id="aiChatPanel" role="dialog" aria-modal="false" aria-hidden="true" aria-labelledby="aiChatTitle" hidden>
         <header class="ai-chat-header">
           <div><span class="ai-chat-mark" aria-hidden="true">知</span><div><h2 id="aiChatTitle">知界 AI 咨询助手</h2><p>可以先问服务、合作流程和准备事项</p></div></div>
           <button type="button" class="ai-chat-close" data-close-ai-chat aria-label="关闭">×</button>
@@ -599,14 +597,16 @@
         </form>
         <p class="ai-chat-status" id="aiChatStatus" role="status" aria-live="polite"></p>
       </div>
+      <button class="ai-chat-launcher" type="button" data-open-ai-chat data-ai-chat-launcher aria-expanded="false" aria-controls="aiChatPanel" aria-label="打开知界 AI 咨询助手">
+        <span class="ai-chat-launcher-mark" aria-hidden="true">知</span><span class="ai-chat-launcher-copy"><b>在线咨询</b><small>问问 AI 助手</small></span><span class="ai-chat-launcher-arrow" aria-hidden="true">↗</span>
+      </button>
     </section>
     <div class="mobile-action">
-      <button type="button" data-open-ai-chat>在线问 AI</button
-      ><button class="js-order" type="button" data-plan="待沟通方案">
+      <button class="js-order" type="button" data-plan="待沟通方案">
         免费判断
       </button>
     </div>
     <script src="script.js?v=20260927-7"></script>
-    <script src="chat.js?v=20260927-1" defer></script>
+    <script src="chat.js?v=20260927-2" defer></script>
   </body>
 </html>

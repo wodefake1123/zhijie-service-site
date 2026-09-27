@@ -45,6 +45,8 @@ export default {
         return await createOrder(request, env);
       if (url.pathname === "/api/pageview" && request.method === "POST")
         return await recordPageview(request, env);
+      if (url.pathname === "/api/ai-chat" && request.method === "POST")
+        return await chatWithCoze(request, env);
       if (url.pathname === "/api/order-status" && request.method === "POST")
         return await getOrderStatus(request, env);
       if (url.pathname === "/api/admin/login" && request.method === "POST")
@@ -188,6 +190,161 @@ async function recordPageview(request, env) {
   const date = new Date().toISOString().slice(0, 10);
   await env.DB.prepare("INSERT INTO pageviews (view_date, path, device, views) VALUES (?, ?, ?, 1) ON CONFLICT(view_date, path, device) DO UPDATE SET views = views + 1").bind(date, path, device).run();
   return json(request, env, { ok: true }, 201);
+}
+
+async function chatWithCoze(request, env) {
+  assertAllowedOrigin(request, env);
+  assertJson(request);
+  if (
+    !env.COZE_OAUTH_APP_ID ||
+    !env.COZE_OAUTH_KEY_ID ||
+    !env.COZE_OAUTH_PRIVATE_KEY
+  )
+    return json(request, env, { error: "AI 咨询暂未开通，请通过微信联系工作室。" }, 503);
+
+  const body = await readJson(request, 2500);
+  const message = clean(body.message, 800, true);
+  const sessionId = clean(body.sessionId, 64, true);
+  const conversationId = clean(body.conversationId, 32);
+  if (message.length < 1) throw new HttpError(400, "请输入问题后再发送");
+  if (!/^[a-f0-9-]{36}$/i.test(sessionId))
+    throw new HttpError(400, "咨询会话已失效，请刷新页面后重试");
+  if (conversationId && !/^\d{1,24}$/.test(conversationId))
+    throw new HttpError(400, "咨询会话已失效，请刷新页面后重试");
+
+  const fingerprint = `ai:${await sha256(request.headers.get("CF-Connecting-IP") || "unknown")}`;
+  const now = Date.now();
+  const row = await env.DB.prepare(
+    "SELECT window_started_at, submissions FROM submission_limits WHERE fingerprint = ?",
+  ).bind(fingerprint).first();
+  const active = row && now - row.window_started_at < 15 * 60 * 1000;
+  if (active && row.submissions >= 10)
+    return json(request, env, { error: "咨询发送较频繁，请 15 分钟后再试。" }, 429);
+  await env.DB.prepare(
+    "INSERT INTO submission_limits (fingerprint, window_started_at, submissions) VALUES (?, ?, ?) ON CONFLICT(fingerprint) DO UPDATE SET window_started_at = excluded.window_started_at, submissions = excluded.submissions",
+  ).bind(fingerprint, active ? row.window_started_at : now, active ? row.submissions + 1 : 1).run();
+
+  try {
+    const token = await createCozeAccessToken(env, sessionId);
+    const chatUrl = new URL("https://api.coze.cn/v3/chat");
+    if (conversationId) chatUrl.searchParams.set("conversation_id", conversationId);
+    const chatResponse = await fetch(chatUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        bot_id: env.COZE_BOT_ID || "7690064405412937766",
+        user_id: `web-${sessionId}`,
+        stream: false,
+        auto_save_history: true,
+        additional_messages: [
+          { role: "user", content: message, content_type: "text" },
+        ],
+      }),
+    });
+    const chat = await chatResponse.json();
+    if (!chatResponse.ok || chat.code !== 0 || !chat.data?.id || !chat.data?.conversation_id) {
+      console.error("coze_chat_start_failed", { status: chatResponse.status, code: chat.code, logid: chat.detail?.logid });
+      throw new Error("chat_start_failed");
+    }
+
+    let state = chat.data;
+    for (let attempt = 0; state.status !== "completed" && attempt < 20; attempt++) {
+      if (["failed", "canceled", "requires_action"].includes(state.status))
+        throw new Error("chat_not_completed");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const retrieveUrl = new URL("https://api.coze.cn/v3/chat/retrieve");
+      retrieveUrl.searchParams.set("conversation_id", chat.data.conversation_id);
+      retrieveUrl.searchParams.set("chat_id", chat.data.id);
+      const retrieveResponse = await fetch(retrieveUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const retrieved = await retrieveResponse.json();
+      if (!retrieveResponse.ok || retrieved.code !== 0 || !retrieved.data) {
+        console.error("coze_chat_retrieve_failed", { status: retrieveResponse.status, code: retrieved.code, logid: retrieved.detail?.logid });
+        throw new Error("chat_retrieve_failed");
+      }
+      state = retrieved.data;
+    }
+    if (state.status !== "completed")
+      return json(request, env, { error: "回复时间较长，请稍后重试。" }, 504);
+
+    const messagesUrl = new URL("https://api.coze.cn/v3/chat/message/list");
+    messagesUrl.searchParams.set("conversation_id", chat.data.conversation_id);
+    messagesUrl.searchParams.set("chat_id", chat.data.id);
+    const messagesResponse = await fetch(messagesUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const result = await messagesResponse.json();
+    if (!messagesResponse.ok || result.code !== 0 || !Array.isArray(result.data)) {
+      console.error("coze_chat_messages_failed", { status: messagesResponse.status, code: result.code, logid: result.detail?.logid });
+      throw new Error("chat_messages_failed");
+    }
+    const reply = result.data
+      .filter((item) => item.chat_id === chat.data.id && item.role === "assistant" && item.type === "answer")
+      .sort((a, b) => (a.created_at || 0) - (b.created_at || 0))
+      .map((item) => item.content || "")
+      .filter(Boolean)
+      .join("\n");
+    if (!reply) throw new Error("chat_answer_missing");
+    return json(request, env, { reply, conversationId: chat.data.conversation_id });
+  } catch (error) {
+    if (error instanceof HttpError) throw error;
+    console.error("coze_chat_failed", { message: error?.message });
+    return json(request, env, { error: "AI 暂时没有响应，请稍后重试或通过微信联系工作室。" }, 502);
+  }
+}
+
+async function createCozeAccessToken(env, sessionId) {
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: "RS256", typ: "JWT", kid: env.COZE_OAUTH_KEY_ID };
+  const payload = {
+    iss: env.COZE_OAUTH_APP_ID,
+    aud: "api.coze.cn",
+    iat: now,
+    exp: now + 600,
+    jti: crypto.randomUUID(),
+    session_name: `web-${sessionId}`,
+  };
+  const enc = (value) => base64Url(new TextEncoder().encode(JSON.stringify(value)));
+  const unsigned = `${enc(header)}.${enc(payload)}`;
+  const pem = env.COZE_OAUTH_PRIVATE_KEY.replace(/\\n/g, "\n");
+  const pemBody = pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\s/g, "");
+  const keyBytes = Uint8Array.from(atob(pemBody), (char) => char.charCodeAt(0));
+  const key = await crypto.subtle.importKey(
+    "pkcs8",
+    keyBytes,
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(unsigned));
+  const jwt = `${unsigned}.${base64Url(new Uint8Array(signature))}`;
+  const response = await fetch("https://api.coze.cn/api/permission/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      duration_seconds: 900,
+    }),
+  });
+  const result = await response.json();
+  if (!response.ok || !result.access_token) {
+    console.error("coze_oauth_token_failed", { status: response.status, code: result.code, msg: result.msg });
+    throw new Error("coze_token_failed");
+  }
+  return result.access_token;
+}
+
+function base64Url(bytes) {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
 async function getAdminStats(request, env) {

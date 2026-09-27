@@ -68,7 +68,7 @@
         <a href="#services">能帮你做什么</a><a href="#cases">演示案例</a
         ><a href="#process">怎么合作</a><a href="#faq">常见问题</a
         ><a href="#contact">联系</a
-        ><a class="nav-chat" href="https://www.coze.cn/store/agent/7690064405412937766?bot_id=true" target="_blank" rel="noopener noreferrer" aria-label="在线咨询 AI 助手（新窗口打开）">在线咨询 ↗</a
+        ><a class="nav-chat" href="#aiChat" data-open-ai-chat aria-label="在官网打开 AI 咨询">在线咨询 ↗</a
         ><button class="nav-order js-order" type="button" data-plan="待沟通方案">
           免费判断
         </button>
@@ -92,7 +92,7 @@
               data-plan="待沟通方案"
             >
               免费判断我的业务能不能用 AI <span>↗</span></button
-            ><a class="button button-ghost" href="https://www.coze.cn/store/agent/7690064405412937766?bot_id=true" target="_blank" rel="noopener noreferrer">在线咨询 AI 助手 ↗</a>
+            ><button class="button button-ghost" type="button" data-open-ai-chat>在线咨询 AI 助手 ↗</button>
           </div>
           <div class="trust-row">
             <span>先判断是否值得做</span><span>不用懂技术</span><span>确认方案后再实施</span>
@@ -581,12 +581,32 @@
       ><img id="lightboxImage" alt="" />
       <p id="lightboxCaption"></p>
     </div>
+    <section class="ai-chat" id="aiChat" aria-hidden="true" hidden>
+      <button class="ai-chat-backdrop" type="button" data-close-ai-chat aria-label="关闭 AI 咨询"></button>
+      <div class="ai-chat-panel" role="dialog" aria-modal="true" aria-labelledby="aiChatTitle">
+        <header class="ai-chat-header">
+          <div><span class="ai-chat-mark" aria-hidden="true">知</span><div><h2 id="aiChatTitle">知界 AI 咨询助手</h2><p>可以先问服务、合作流程和准备事项</p></div></div>
+          <button type="button" class="ai-chat-close" data-close-ai-chat aria-label="关闭">×</button>
+        </header>
+        <div class="ai-chat-notice">请勿输入密码、身份证信息或未经授权的客户资料。AI 回复仅供初步了解。</div>
+        <div class="ai-chat-messages" id="aiChatMessages" role="log" aria-live="polite" aria-relevant="additions text">
+          <p class="ai-chat-welcome">你好，我是知界的 AI 咨询助手。你目前最想解决哪项重复工作？</p>
+        </div>
+        <form class="ai-chat-form" id="aiChatForm">
+          <label class="visually-hidden" for="aiChatInput">输入要咨询的问题</label>
+          <textarea id="aiChatInput" maxlength="800" rows="2" placeholder="输入你想了解的问题…" required></textarea>
+          <button class="ai-chat-send" type="submit">发送</button>
+        </form>
+        <p class="ai-chat-status" id="aiChatStatus" role="status" aria-live="polite"></p>
+      </div>
+    </section>
     <div class="mobile-action">
-      <a href="https://www.coze.cn/store/agent/7690064405412937766?bot_id=true" target="_blank" rel="noopener noreferrer" aria-label="在线咨询 AI 助手（新窗口打开）">在线咨询 ↗</a
+      <button type="button" data-open-ai-chat>在线问 AI</button
       ><button class="js-order" type="button" data-plan="待沟通方案">
         免费判断
       </button>
     </div>
     <script src="script.js?v=20260927-7"></script>
+    <script src="chat.js?v=20260927-1" defer></script>
   </body>
 </html>

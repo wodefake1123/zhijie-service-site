@@ -289,6 +289,16 @@ async function chatWithCoze(request, env) {
       .filter(Boolean)
       .join("\n");
     if (!reply) throw new Error("chat_answer_missing");
+    const activityDateParts = Object.fromEntries(new Intl.DateTimeFormat("en", {
+      timeZone: "Asia/Shanghai",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date()).map(({ type, value }) => [type, value]));
+    const activityDate = `${activityDateParts.year}-${activityDateParts.month}-${activityDateParts.day}`;
+    await env.DB.prepare(
+      "INSERT INTO ai_chat_activity (activity_date, successful_replies) VALUES (?, 1) ON CONFLICT(activity_date) DO UPDATE SET successful_replies = successful_replies + 1",
+    ).bind(activityDate).run();
     return json(request, env, { reply, conversationId: chat.data.conversation_id });
   } catch (error) {
     if (error instanceof HttpError) throw error;

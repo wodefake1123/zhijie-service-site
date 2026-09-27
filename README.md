@@ -1,41 +1,24 @@
-# 知界信息技术服务工作室｜公开服务网站
+# 知界 ZHIJIE 官网
 
-官网前端由 GitHub Pages 免费托管；订单接口、管理后台和 D1 数据库运行在 Cloudflare 免费额度内。订单提交已接入 Cloudflare Turnstile，并由服务端再次验证。
+公开地址：[www.yidianqibu.online](https://www.yidianqibu.online/)。这是无需构建的静态网站，`index.html`、`styles.css`、`script.js` 和 `assets/` 部署在 GitHub Pages。`privacy.html`、`terms.html`、`refund.html` 是独立政策页面。
 
-## 当前支付路线
+首页以普通客户的业务问题为主线：重复工作 → 四项服务 → 前后流程示意 → 工作室演示 → 合作步骤 → 常见问题 → 免费初步判断。案例图片是功能演示截图，业务数据为测试数据，不应改写成真实客户业绩。
 
-- 仅计划接入支付宝与微信支付，不再使用 PayPal。
-- 在官方商户接口、签约主体、密钥和支付回调均准备完成前，官网只允许提交合作需求，不显示付款成功。
-- 不把个人收款码伪装成自动支付系统；订单的“已付款”状态必须来自支付平台的服务端通知或经管理员人工核实。
+## 咨询与后台
 
-## 本地预览
+- 首页按钮打开简短表单，采集行业、重复工作频率、问题描述、联系方式和可选称呼。
+- 表单复用现有 Cloudflare Worker、D1 订单后台和 Turnstile 安全验证。提交需求不等于付款或签约。
+- ZhiFlow 在官网展示的是本地演示截图，不是公开可用的在线 SaaS。
+- 支付宝和微信支付尚未接入；网站不会直接收款，也不会把提交需求显示成付款成功。
 
-直接双击 `index.html` 即可在浏览器中查看。若需要用本地地址预览，可在本文件夹打开 PowerShell 后运行：
+## 本地预览与检查
 
-```powershell
-python -m http.server 8080
-```
+在本目录运行 `python -m http.server 8080`，浏览器访问 `http://localhost:8080`。首次进入会看到 Turnstile 的本地域名验证错误，这是因为安全验证只允许已配置的正式域名；不要用本地报错判断线上提交是否有效。
 
-随后访问 `http://localhost:8080`。停止预览时，在该窗口按 `Ctrl+C`。
+前端无 `build` 或 `lint` 脚本。可执行 `node --check script.js` 检查脚本语法；`backend/package.json` 也未定义测试脚本。发布前需检查桌面和手机显示、全部可见链接、图片放大、FAQ、菜单、咨询表单与正式域名上的安全验证。
 
-## 最快免费部署：Vercel
+## 发布
 
-1. 注册或登录 [Vercel](https://vercel.com/)。
-2. 新建一个 GitHub 仓库，将本文件夹中的 `index.html`、`styles.css`、`script.js`、`README.md` 上传到仓库根目录。
-3. 在 Vercel 点 **Add New → Project**，导入该 GitHub 仓库。
-4. Framework Preset 选择 **Other**，Build Command 和 Output Directory 都留空，然后点 **Deploy**。
-5. 部署完成后会得到一个 `https://...vercel.app` 的公开网址。用手机和电脑各打开一次确认页面、邮件按钮和付款说明正常。
+GitHub 仓库为 `wodefake1123/zhijie-service-site`，`main` 分支推送后触发 GitHub Pages。发布时先确认 `git status`，不要把个人草稿或密钥一并提交；再等待 Pages 部署成功，检查公开首页与图片资源。Cloudflare Worker 是独立后端，本次前端改版不需要重新部署 Worker。
 
-## Cloudflare Pages / GitHub Pages
-
-- **Cloudflare Pages：** 创建 Pages 项目并连接同一 GitHub 仓库；Framework preset 选 **None**；构建命令留空，输出目录填 `/`。
-- **GitHub Pages：** 在仓库 Settings → Pages，Source 选 **Deploy from a branch**，选择 `main` 分支与 `/(root)`，保存后等待公开网址生成。
-
-## 正式接入支付宝或微信支付前的核对
-
-- 公开网址能直接打开，并且移动端显示正常。
-- 已设置真实可用的微信联系入口；有业务邮箱后可再补充。
-- 服务描述、价格和付款流程均真实且与你实际提供的服务一致。
-- 确认签约商户主体、开放的支付产品、回调域名、退款规则和账单对账方式。
-- 商户私钥、平台密钥和 API 密钥只能保存为服务端 Secret，不能写入网页或提交到 GitHub。
-- 以支付宝或微信支付的服务端通知验签结果更新订单，不以页面跳转或客户截图作为自动确认依据。
+任何商户密钥或后台密码都不能写入静态网页或提交到 GitHub。正式支付接入前，还需确认签约商户主体、接口权限、服务端回调验签、退款与对账规则。

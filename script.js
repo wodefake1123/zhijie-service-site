@@ -32,7 +32,7 @@ const form = document.querySelector("#orderForm");
 const planSelect = document.querySelector("#orderPlan");
 const result = document.querySelector("#orderResult");
 const summary = document.querySelector("#orderSummary");
-const firstInput = document.querySelector("#customerName");
+const firstInput = document.querySelector("#industry");
 function openOrder(plan) {
   planSelect.value = [...planSelect.options].some((o) => o.value === plan)
     ? plan
@@ -90,11 +90,19 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const submit = document.querySelector("#submitOrder");
   const name = document.querySelector("#customerName").value.trim() || "未填写";
-  const contact =
-    document.querySelector("#customerContact").value.trim() || "未填写";
-  const need = document.querySelector("#projectNeed").value.trim();
-  const timeline = document.querySelector("#timeline").value;
-  const budget = document.querySelector("#budget").value;
+  const contactInput = document.querySelector("#customerContact");
+  const contact = contactInput.value.trim();
+  const industry = document.querySelector("#industry").value;
+  const frequency = document.querySelector("#frequency").value;
+  const description = document.querySelector("#projectNeed").value.trim();
+  const need = `行业：${industry}\n重复频率：${frequency}\n当前问题：${description}`;
+  const timeline = "先沟通评估";
+  const budget = "先沟通评估";
+  if (!contact) {
+    contactInput.focus();
+    showToast("请填写可联系到你的微信号或其他方式");
+    return;
+  }
   if (!turnstileToken) {
     turnstileStatus.textContent = "请先完成安全验证";
     showToast("请先完成安全验证");
@@ -123,7 +131,7 @@ form.addEventListener("submit", async (e) => {
       data.id.split("-")[0].toUpperCase() +
       "-" +
       data.id.slice(-8).toUpperCase();
-    summary.textContent = `知界信息技术服务工作室｜合作需求\n显示编号：${shortId}\n完整订单编号：${data.id}\n查询凭证：${data.lookupToken}\n\n请妥善保存完整订单编号和查询凭证，二者用于在官网查询项目进度。\n\n称呼：${name}\n联系方式：${contact}\n意向方案：${planSelect.value}\n期望时间：${timeline}\n预算范围：${budget}\n需求说明：${need}\n\n状态：已提交至工作室后台，等待沟通确认。\n说明：提交需求不代表合同成立或已经付款。`;
+    summary.textContent = `知界信息技术服务工作室｜初步判断需求\n显示编号：${shortId}\n完整订单编号：${data.id}\n查询凭证：${data.lookupToken}\n\n请妥善保存完整订单编号和查询凭证，二者用于在官网查询进度。\n\n称呼：${name}\n联系方式：${contact}\n${need}\n\n状态：已提交至工作室后台，等待沟通确认。\n说明：提交需求不代表合同成立或已经付款。`;
     localStorage.setItem("zhijieLastOrder", JSON.stringify({ id: data.id, lookupToken: data.lookupToken }));
     document.querySelector("#orderHint").textContent =
       "需求已安全保存。建议复制摘要并通过微信发送给工作室，方便及时沟通。";
@@ -141,7 +149,7 @@ form.addEventListener("submit", async (e) => {
       window.turnstile.reset(turnstileWidgetId);
     turnstileStatus.textContent = "请完成安全验证后再次提交";
     submit.disabled = false;
-    submit.textContent = "提交需求并生成订单编号";
+    submit.textContent = "提交，获取初步判断";
     result.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 });
@@ -205,110 +213,6 @@ queryForm.addEventListener("submit", async (event) => {
   }
 });
 
-const solutions = {
-  office: {
-    code: "01 / OFFICE EFFICIENCY",
-    title: "办公提效与批量处理",
-    desc: "适合每天反复整理文件、表格、文档或复制信息的个人与团队，把固定规则变成一键执行流程。",
-    fit: "批量改名、表格合并、格式转换、文档生成",
-    deliver: "可运行工具、规则配置、使用说明、测试样例",
-    time: "3–7 个工作日",
-    plan: "基础方案",
-  },
-  data: {
-    code: "02 / DATA APPLICATION",
-    title: "数据清洗、分析与可视化",
-    desc: "适合数据来源杂乱、每周反复统计或需要经营看板的场景，让数据从“堆在表里”变成可检查的结论。",
-    fit: "多表合并、数据去重、销售分析、经营看板",
-    deliver: "清洗规则、标准数据、分析结果、可视化界面",
-    time: "5–12 个工作日",
-    plan: "标准方案",
-  },
-  ai: {
-    code: "03 / AI WORKFLOW",
-    title: "AI 信息处理与业务工作流",
-    desc: "把大模型放入明确的业务节点，完成提取、分类、整理、生成和通知，并保留必要的人工确认。",
-    fit: "资料分类、内容提取、知识问答、自动通知",
-    deliver: "工作流配置、提示规则、结构化结果、运行说明",
-    time: "7–15 个工作日",
-    plan: "标准方案",
-  },
-  tool: {
-    code: "04 / CUSTOM TOOL",
-    title: "脚本、网页与专用小工具",
-    desc: "针对一个明确卡点制作轻量工具，减少对通用软件的迁就，形成更贴合自身工作方式的操作界面。",
-    fit: "桌面小工具、网页表单、内部工具、流程衔接",
-    deliver: "工具程序、操作界面、测试版本、交付文档",
-    time: "7–20 个工作日",
-    plan: "定制方案",
-  },
-};
-const panelFields = {
-  code: document.querySelector("#solutionCode"),
-  title: document.querySelector("#solutionTitle"),
-  desc: document.querySelector("#solutionDesc"),
-  fit: document.querySelector("#solutionFit"),
-  deliver: document.querySelector("#solutionDeliver"),
-  time: document.querySelector("#solutionTime"),
-};
-document.querySelectorAll(".solution-tab").forEach((tab) =>
-  tab.addEventListener("click", () => {
-    const item = solutions[tab.dataset.solution];
-    document.querySelectorAll(".solution-tab").forEach((t) => {
-      t.classList.toggle("active", t === tab);
-      t.setAttribute("aria-selected", String(t === tab));
-    });
-    Object.keys(panelFields).forEach(
-      (key) => (panelFields[key].textContent = item[key]),
-    );
-    const order = document.querySelector(".js-solution-order");
-    order.dataset.plan = item.plan;
-    document.querySelector("#solutionPanel").animate(
-      [
-        { opacity: 0.55, transform: "translateY(8px)" },
-        { opacity: 1, transform: "none" },
-      ],
-      { duration: 320, easing: "ease-out" },
-    );
-  }),
-);
-document
-  .querySelector(".js-solution-order")
-  .addEventListener("click", (e) => openOrder(e.currentTarget.dataset.plan));
-
-const estimateInputs = ["estimateType", "estimateComplexity", "estimateUI"].map(
-  (id) => document.querySelector("#" + id),
-);
-function updateEstimate() {
-  const type = document.querySelector("#estimateType").value,
-    complexity = document.querySelector("#estimateComplexity").value,
-    ui = document.querySelector("#estimateUI").value;
-  let score =
-    { simple: 0, medium: 1, complex: 2 }[complexity] +
-    { no: 0, yes: 1, advanced: 2 }[ui] +
-    (type === "ai" ? 1 : 0);
-  let data =
-    score <= 1
-      ? ["基础方案", "¥300–800", "预计 3–7 个工作日"]
-      : score <= 3
-        ? ["标准方案", "¥800–1,500", "预计 5–12 个工作日"]
-        : ["定制方案", "¥1,500 起", "预计 10–20 个工作日"];
-  document.querySelector("#estimatePlan").textContent = data[0];
-  document.querySelector("#estimatePrice").textContent = data[1];
-  document.querySelector("#estimateTime").textContent = data[2];
-  return data;
-}
-estimateInputs.forEach((input) =>
-  input.addEventListener("change", updateEstimate),
-);
-updateEstimate();
-document.querySelector(".js-estimate-order").addEventListener("click", () => {
-  const data = updateEstimate();
-  openOrder(data[0]);
-  document.querySelector("#projectNeed").value =
-    `初步估算：${data.join("，")}\n需求类型：${document.querySelector("#estimateType").selectedOptions[0].text}\n复杂程度：${document.querySelector("#estimateComplexity").selectedOptions[0].text}\n界面需求：${document.querySelector("#estimateUI").selectedOptions[0].text}\n补充说明：`;
-});
-
 const lightbox = document.querySelector("#lightbox"),
   lightboxImage = document.querySelector("#lightboxImage"),
   lightboxCaption = document.querySelector("#lightboxCaption");
@@ -344,12 +248,3 @@ document.querySelectorAll(".faq details").forEach((item) =>
       });
   }),
 );
-const glow = document.querySelector(".cursor-glow");
-if (matchMedia("(pointer:fine)").matches)
-  document.addEventListener(
-    "pointermove",
-    (e) => {
-      glow.style.transform = `translate(${e.clientX - 180}px,${e.clientY - 180}px)`;
-    },
-    { passive: true },
-  );

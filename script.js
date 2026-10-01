@@ -32,7 +32,7 @@ const form = document.querySelector("#orderForm");
 const planSelect = document.querySelector("#orderPlan");
 const result = document.querySelector("#orderResult");
 const summary = document.querySelector("#orderSummary");
-const firstInput = document.querySelector("#industry");
+const firstInput = document.querySelector("#projectNeed");
 let dialogTrigger = null;
 let dialogInertStates = new Map();
 function activateDialog(dialog) {
@@ -47,7 +47,8 @@ function activateDialog(dialog) {
 function deactivateDialog() {
   dialogInertStates.forEach((inert, element) => { element.inert = inert; });
   dialogInertStates.clear();
-  dialogTrigger?.focus();
+  if (dialogTrigger?.getClientRects().length) dialogTrigger.focus();
+  else menuButton.focus();
 }
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Tab") return;
@@ -301,3 +302,9 @@ document.querySelectorAll(".faq details").forEach((item) =>
       });
   }),
 );
+
+// Reveal the existing progress form when navigating to it from the footer.
+document.querySelectorAll('a[href="#order-query"]').forEach((link) => {
+  link.addEventListener('click', () => { document.querySelector('#order-query').open = true; });
+});
+if (location.hash === '#order-query') document.querySelector('#order-query').open = true;

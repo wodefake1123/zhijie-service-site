@@ -5,9 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
-export const publicFiles = ['index.html', 'privacy.html', 'terms.html', 'refund.html', 'styles.css', 'legal.css', 'script.js', 'chat.js', 'robots.txt', 'sitemap.xml', 'CNAME'];
+export const publicFiles = ['index.html', 'privacy.html', 'terms.html', 'refund.html', 'styles.css', 'legal.css', 'script.js', 'chat.js', 'demo.js', 'demo-data.mjs', 'robots.txt', 'sitemap.xml', 'CNAME'];
 export async function checkSite() {
-  for (const script of ['script.js', 'chat.js', 'backend/src/worker.js', 'scripts/check.mjs', 'scripts/build.mjs']) {
+  for (const script of ['script.js', 'chat.js', 'demo.js', 'demo-data.mjs', 'backend/src/worker.js', 'scripts/check.mjs', 'scripts/build.mjs']) {
     const source = await readFile(resolve(root, script), 'utf8');
     const result = spawnSync(process.execPath, ['--input-type=module', '--check'], { input: source, encoding: 'utf8' });
     if (result.status !== 0) throw new Error(`${script}: ${result.stderr}`);

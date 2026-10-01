@@ -17,19 +17,21 @@
   }
   let conversationId = sessionStorage.getItem(conversationKey) || "";
   let sending = false;
+  let chatTrigger = launcher;
 
   function openChat(event) {
     event?.preventDefault();
+    chatTrigger = event?.currentTarget || launcher;
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
-    launcher.setAttribute("aria-expanded", "true");
+    document.querySelectorAll("[data-open-ai-chat]").forEach(button => button.setAttribute("aria-expanded", "true"));
     input.focus();
   }
   function closeChat() {
     panel.hidden = true;
     panel.setAttribute("aria-hidden", "true");
-    launcher.setAttribute("aria-expanded", "false");
-    launcher.focus();
+    document.querySelectorAll("[data-open-ai-chat]").forEach(button => button.setAttribute("aria-expanded", "false"));
+    chatTrigger.focus();
   }
   function addMessage(text, who, pending = false) {
     const bubble = document.createElement("p");
@@ -40,7 +42,7 @@
     return bubble;
   }
 
-  launcher.addEventListener("click", openChat);
+  document.querySelectorAll("[data-open-ai-chat]").forEach((button) => button.addEventListener("click", openChat));
   panel.querySelectorAll("[data-close-ai-chat]").forEach((button) =>
     button.addEventListener("click", closeChat),
   );
@@ -82,7 +84,12 @@
       status.textContent = "回复已发送";
     } catch (error) {
       pending.remove();
-      addMessage(error.message || "连接暂时有问题，请稍后再试。", "assistant error");
+      const failure = addMessage(error.message || "连接暂时有问题，请稍后再试。", "assistant error");
+      const contactLink = document.createElement("a");
+      contactLink.href = "#contact";
+      contactLink.textContent = "联系工作室，直接沟通 →";
+      contactLink.addEventListener("click", closeChat);
+      failure.append(document.createTextNode("\n"), contactLink);
       status.textContent = "回复失败，可修改问题后重试";
       input.value = message;
     } finally {

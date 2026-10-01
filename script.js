@@ -33,7 +33,36 @@ const planSelect = document.querySelector("#orderPlan");
 const result = document.querySelector("#orderResult");
 const summary = document.querySelector("#orderSummary");
 const firstInput = document.querySelector("#industry");
+let dialogTrigger = null;
+let dialogInertStates = new Map();
+function activateDialog(dialog) {
+  dialogTrigger = document.activeElement;
+  dialogInertStates = new Map();
+  [...document.body.children].forEach((element) => {
+    if (element === dialog || element.tagName === "SCRIPT") return;
+    dialogInertStates.set(element, element.inert);
+    element.inert = true;
+  });
+}
+function deactivateDialog() {
+  dialogInertStates.forEach((inert, element) => { element.inert = inert; });
+  dialogInertStates.clear();
+  dialogTrigger?.focus();
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Tab") return;
+  const dialog = document.querySelector(".modal.open, .lightbox.open");
+  if (!dialog) return;
+  const items = [...dialog.querySelectorAll("button, input, select, textarea, a[href]")]
+    .filter((element) => !element.disabled && element.getClientRects().length);
+  const first = items[0], last = items.at(-1);
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+});
 function openOrder(plan) {
+  menuButton.setAttribute("aria-expanded", "false");
+  nav.classList.remove("open");
+  activateDialog(modal);
   planSelect.value = [...planSelect.options].some((o) => o.value === plan)
     ? plan
     : "待沟通方案";
@@ -47,6 +76,7 @@ function closeOrder() {
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  deactivateDialog();
 }
 document
   .querySelectorAll(".js-order")
@@ -115,7 +145,7 @@ form.addEventListener("submit", async (e) => {
   const industry = document.querySelector("#industry").value;
   const frequency = document.querySelector("#frequency").value;
   const description = document.querySelector("#projectNeed").value.trim();
-  const need = `行业：${industry}\n重复频率：${frequency}\n当前问题：${description}`;
+  const need = `行业：${industry}\n使用频率：${frequency}\n项目需求：${description}`;
   const timeline = "先沟通评估";
   const budget = "先沟通评估";
   if (!contact) {
@@ -169,7 +199,7 @@ form.addEventListener("submit", async (e) => {
       window.turnstile.reset(turnstileWidgetId);
     turnstileStatus.textContent = "请完成安全验证后再次提交";
     submit.disabled = false;
-    submit.textContent = "提交，获取初步判断";
+    submit.textContent = "提交需求，获取初步建议";
     result.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 });
@@ -240,15 +270,18 @@ function closeLightbox() {
   lightbox.classList.remove("open");
   lightbox.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  deactivateDialog();
 }
 document.querySelectorAll(".js-lightbox").forEach((btn) =>
   btn.addEventListener("click", () => {
+    activateDialog(lightbox);
     lightboxImage.src = btn.dataset.src;
     lightboxImage.alt = btn.dataset.caption;
     lightboxCaption.textContent = btn.dataset.caption;
     lightbox.classList.add("open");
     lightbox.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
+    lightbox.querySelector(".lightbox-close").focus();
   }),
 );
 lightbox.addEventListener("click", (e) => {

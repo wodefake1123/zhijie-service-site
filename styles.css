@@ -229,6 +229,9 @@ footer { padding-block: 54px 28px; }
 .modal input:focus, .modal select:focus, .modal textarea:focus { outline: 2px solid #748a9f; outline-offset: 2px; }
 .turnstile-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border: 1px solid #c3cbd2; border-radius: 4px; padding: 10px; min-height: 48px; }
 .turnstile-row small { color: #667381; font-size: 10px; }
+.turnstile-skip, .form-direct { color: #345572; font-size: 10px; text-decoration: underline; }
+.turnstile-skip { flex-basis: 100%; }
+.form-direct { margin-top: 10px; }
 .modal .consent-row { display: flex; align-items: flex-start; gap: 10px; line-height: 1.7; font-size: 10px; }
 .modal .consent-row input { margin: 3px 0 0; width: 16px; height: 16px; min-height: 0; flex-shrink: 0; }
 .consent-row a { text-decoration: underline; color: #345572; }
@@ -236,9 +239,10 @@ footer { padding-block: 54px 28px; }
 .optional-context > summary { padding: 12px 0; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #536373; }
 .optional-context[open] > summary > span { transform: rotate(45deg); }
 .form-context { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-bottom: 16px; }
-.form-actions { display: flex; align-items: center; gap: 18px; }
+.form-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .form-actions small { color: #65727e; font-size: 10px; }
 .form-actions .button { white-space: nowrap; }
+.form-actions .form-direct { flex: 1 0 100%; margin-top: 0; text-align: left; }
 .order-result { border-top: 1px solid #c4ccd4; margin-top: 24px; padding-top: 22px; }
 .order-result > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .order-result h3 { font-size: 17px; margin: 0; }

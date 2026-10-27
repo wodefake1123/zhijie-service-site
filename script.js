@@ -97,6 +97,22 @@ let turnstileWidgetId = null;
 let turnstileToken = "";
 const turnstileStatus = document.querySelector("#turnstileStatus");
 let turnstileLoadStarted = false;
+const skipTurnstile = document.querySelector("#skipTurnstile");
+const directContact = document.querySelector("#directContact");
+let turnstileFallbackTimer = null;
+function showTurnstileFallback(message) {
+  if (!skipTurnstile) return;
+  skipTurnstile.hidden = false;
+  if (message) turnstileStatus.textContent = message;
+}
+function goDirectContact() {
+  closeOrder();
+  const target =
+    document.querySelector("#contact") || document.querySelector("#orderQuery");
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+if (skipTurnstile) skipTurnstile.addEventListener("click", goDirectContact);
+if (directContact) directContact.addEventListener("click", goDirectContact);
 function loadTurnstile() {
   if (window.turnstile) {
     window.onTurnstileReady();
@@ -109,10 +125,15 @@ function loadTurnstile() {
   script.async = true;
   script.onerror = () => {
     turnstileLoadStarted = false;
-    turnstileStatus.textContent = "安全验证加载失败，请刷新后重试";
     script.remove();
+    showTurnstileFallback("安全验证加载失败，可直接加企业微信联系");
   };
   document.head.appendChild(script);
+  clearTimeout(turnstileFallbackTimer);
+  turnstileFallbackTimer = setTimeout(() => {
+    if (turnstileWidgetId === null)
+      showTurnstileFallback("安全验证加载较慢，也可以直接加企业微信联系");
+  }, 9000);
 }
 window.onTurnstileReady = () => {
   if (turnstileWidgetId !== null || !window.turnstile) return;
@@ -124,6 +145,8 @@ window.onTurnstileReady = () => {
     action: "submit_order",
     callback: (token) => {
       turnstileToken = token;
+      clearTimeout(turnstileFallbackTimer);
+      if (skipTurnstile) skipTurnstile.hidden = true;
       turnstileStatus.textContent = "安全验证已完成";
     },
     "expired-callback": () => {
@@ -156,6 +179,7 @@ form.addEventListener("submit", async (e) => {
   }
   if (!turnstileToken) {
     turnstileStatus.textContent = "请先完成安全验证";
+    showTurnstileFallback("安全验证没有完成，也可以直接加企业微信联系");
     showToast("请先完成安全验证");
     return;
   }
@@ -189,11 +213,17 @@ form.addEventListener("submit", async (e) => {
     result.hidden = false;
     showToast("需求已提交，订单编号已生成");
   } catch (error) {
-    summary.textContent = `本次需求尚未保存到后台。\n原因：${error.message}\n\n请稍后重试，或复制你的需求后通过微信联系工作室。`;
+    const networkIssue =
+      error instanceof TypeError ||
+      /Failed to fetch|NetworkError|Load failed|fetch/i.test(error.message || "");
+    summary.textContent = `本次需求没有提交成功${networkIssue ? "（当前网络无法连接到提交服务）" : ""}。\n原因：${error.message}\n\n请复制下面的需求摘要，扫描二维码加企业微信，直接发给工作室即可。`;
     document.querySelector("#orderHint").textContent =
-      "没有生成订单，也没有发生扣款。你可以稍后重试或直接微信联系。";
+      "没有生成订单，也没有发生扣款。扫码加企业微信，把需求直接发给我们。";
     result.hidden = false;
-    showToast("提交未完成，请查看提示");
+    try {
+      result.scrollIntoView({ behavior: "smooth", block: "center" });
+    } catch {}
+    showToast("提交未完成，可扫码直接联系");
   } finally {
     turnstileToken = "";
     if (window.turnstile && turnstileWidgetId !== null)

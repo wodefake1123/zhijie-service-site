@@ -12,7 +12,9 @@ nav.querySelectorAll("a").forEach((link) =>
   }),
 );
 document.querySelector("#year").textContent = new Date().getFullYear();
-if (!sessionStorage.getItem("zhijiePageview")) {
+// 访问统计曾上报到 workers.dev。该域名在中国大陆被 DNS 污染，访客侧必然失败并产生控制台报错，
+// 因此暂停上报。若将来换成国内可达的后端，可在此恢复 POST /api/pageview。
+if (false && !sessionStorage.getItem("zhijiePageview")) {
   sessionStorage.setItem("zhijiePageview", "1");
   fetch("https://zhijie-orders.zhijie-orders-backend.workers.dev/api/pageview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path: location.pathname, device: matchMedia("(max-width:720px)").matches ? "mobile" : "desktop" }), keepalive: true }).catch(() => {});
 }

@@ -34,7 +34,7 @@
     <link rel="canonical" href="https://www.yidianqibu.online/" />
     <link rel="icon" href="assets/zhijie-logo.png" />
     <title>知界工作室 ZHIJIE｜把想法做成可用的 AI 产品</title>
-    <link rel="stylesheet" href="styles.css?v=20261027-2" />
+    <link rel="stylesheet" href="styles.css?v=20261027-3" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -208,7 +208,27 @@ ZJ-003,显示器,</textarea>
         <p class="modal-intro">
           只需描述想法或现状，不用懂技术。提交后我们会按你留下的方式联系；此步骤不收费，不会扣款或形成合同。
         </p>
-        <form id="orderForm">
+        <div class="order-entry">
+          <a
+            class="button button-dark"
+            id="openFormLink"
+            href="https://docs.qq.com/form/page/DSENrc1pyeEFqcGVx"
+            target="_blank"
+            rel="noopener"
+            >填写需求表单 <span aria-hidden="true">↗</span></a
+          >
+          <button class="button button-outline" id="showWecom" type="button" aria-expanded="false" aria-controls="orderEntryQr">
+            扫码加企业微信
+          </button>
+          <p class="order-entry-note">
+            表单由腾讯文档承载，只用于本次需求沟通，约 1 个工作日回复。也可以直接扫码加企业微信。
+          </p>
+          <div class="order-entry-qr" id="orderEntryQr" hidden>
+            <img src="assets/wecom-contact-qr.png" alt="工作室企业微信二维码" />
+            <p>微信扫一扫，加好友后直接聊需求</p>
+          </div>
+        </div>
+        <form id="orderForm" hidden>
           <label class="visually-hidden-field"
             >意向方案<select id="orderPlan" name="plan">
               <option>基础方案</option>
@@ -296,8 +316,8 @@ ZJ-003,显示器,</textarea>
       </button>
     </section>
     <div class="mobile-action"><a href="#cases">看作品 <span aria-hidden="true">↓</span></a><button class="js-order" type="button" data-plan="待沟通方案">聊聊项目 <span class="arrow-diagonal" aria-hidden="true"></span></button></div>
-    <script src="script.js?v=20261027-1"></script>
-    <script src="chat.js?v=20261027-1" defer></script>
-    <script type="module" src="demo.js?v=20261027-1"></script>
+    <script src="script.js?v=20261027-3"></script>
+    <script src="chat.js?v=20261027-3" defer></script>
+    <script type="module" src="demo.js?v=20261027-3"></script>
   </body>
 </html>

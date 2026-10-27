@@ -70,14 +70,31 @@ function openOrder(plan) {
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
-  loadTurnstile();
-  setTimeout(() => firstInput.focus(), 80);
+  if (!form || !form.hidden) loadTurnstile();
+  setTimeout(() => {
+    if (form && form.hidden) {
+      const link = document.querySelector("#openFormLink");
+      if (link) link.focus();
+      return;
+    }
+    firstInput.focus();
+  }, 80);
 }
 function closeOrder() {
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
   deactivateDialog();
+}
+const showWecom = document.querySelector("#showWecom");
+const orderEntryQr = document.querySelector("#orderEntryQr");
+if (showWecom && orderEntryQr) {
+  showWecom.addEventListener("click", () => {
+    const willOpen = orderEntryQr.hidden;
+    orderEntryQr.hidden = !willOpen;
+    showWecom.setAttribute("aria-expanded", String(willOpen));
+    showWecom.textContent = willOpen ? "收起二维码" : "扫码加企业微信";
+  });
 }
 document
   .querySelectorAll(".js-order")

@@ -31,7 +31,11 @@ export async function checkSite() {
     if (file === 'index.html') {
       for (const [, attrs, source] of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) {
         if (/\bsrc=/.test(attrs)) continue;
-        const hash = createHash('sha256').update(source).digest('base64');
+        // 非可执行的数据块（如 application/ld+json）不参与 CSP 脚本哈希。
+        if (/type="(?!text\/javascript|module|application\/javascript)[^"]+"/.test(attrs)) continue;
+        // Windows 检出时 CRLF 会改变字节，仓库内哈希按 LF 计算，这里统一规范化。
+        const normalized = source.replace(/\r\n/g, '\n');
+        const hash = createHash('sha256').update(normalized).digest('base64');
         if (!html.includes(`'sha256-${hash}'`)) throw new Error('Inline script does not match the Content Security Policy hash');
       }
     }

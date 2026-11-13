@@ -1,0 +1,92 @@
+
+/* ───────────────────────── 货眼产品页（/huoyan.html） ─────────────────────────
+   和首页同一套颜色与字阶，只补价格卡、步骤块这两个版式。
+   页面不引第三方、不内联样式（站点 CSP 是 style-src 'self'）。 */
+
+.hy-hero { padding-block: clamp(72px, 9vw, 118px) 0; }
+.hy-eyebrow {
+  margin: 0 0 24px; font: 11px/1.6 "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  letter-spacing: .06em; color: #b6bdc4;
+}
+.hy-title {
+  margin: 0; font-size: clamp(40px, 5.6vw, 76px); line-height: 1.04;
+  letter-spacing: -.03em; font-weight: 600;
+}
+.hy-title span {
+  display: block; margin-top: 22px; font-size: .42em; line-height: 1.35;
+  letter-spacing: -.01em; color: #98a1aa; font-weight: 500;
+}
+.hy-lead {
+  max-width: 660px; margin: 30px 0 0; color: #a7adb4;
+  font-size: 15px; line-height: 1.95;
+}
+.hy-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.hy-facts {
+  display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 26px;
+  font: 10px/1.7 ui-monospace, monospace; letter-spacing: .04em; color: #7f868d;
+}
+.hy-facts span::before { content: "· "; color: #4a5259; }
+
+.hy-shot {
+  margin: 52px 0 0; border: 1px solid #24272c; border-radius: 6px;
+  overflow: hidden; background: #0d0f11;
+}
+.hy-shot img { display: block; width: 100%; height: auto; }
+.hy-shot figcaption {
+  padding: 12px 18px; border-top: 1px solid #24272c;
+  color: #7f868d; font-size: 11px; line-height: 1.7;
+}
+
+.hy-shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.hy-shots .hy-shot { margin: 0; }
+
+.hy-plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.hy-plan {
+  position: relative; display: flex; flex-direction: column; gap: 7px;
+  padding: 24px 20px 22px; border: 1px solid #2a2e33; border-radius: 6px;
+  background: #111315;
+}
+.hy-plan.on { border-color: #3c4b5a; background: #14181c; }
+.hy-name { font-size: 15px; font-weight: 600; color: #eef0ee; }
+.hy-price {
+  font: 600 32px/1.05 "Cascadia Mono", "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: -.02em; color: #f0f0ec;
+}
+.hy-price i { font-style: normal; margin-right: 3px; font-size: 15px; color: #96a0aa; }
+.hy-price em { font-style: normal; margin-left: 5px; font-size: 11px; color: #7f868d; letter-spacing: 0; }
+.hy-plan p { margin: 4px 0 0; color: #98a1aa; font-size: 11px; line-height: 1.8; }
+.hy-badge {
+  position: absolute; top: -1px; right: 16px; padding: 3px 9px;
+  font-size: 9px; letter-spacing: .05em; color: #d3e3f1;
+  background: #1b2833; border: 1px solid #334559; border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.hy-fine { margin: 18px 0 0; color: #7f868d; font-size: 11px; line-height: 1.9; }
+
+.hy-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.hy-step { padding: 24px 22px; border: 1px solid #24272c; border-radius: 6px; background: #101214; }
+.hy-step b {
+  display: block; margin-bottom: 12px; font: 10px/1.6 ui-monospace, monospace;
+  letter-spacing: .06em; color: #7f868d;
+}
+.hy-step h3 { margin: 0 0 9px; font-size: 15px; font-weight: 600; color: #eef0ee; }
+.hy-step p { margin: 0; color: #98a1aa; font-size: 12px; line-height: 1.9; }
+
+.hy-qa { border-top: 1px solid #24272c; }
+.hy-qa summary {
+  padding: 22px 0; cursor: pointer; list-style: none;
+  font-size: 14px; color: #e4e6e4; border-bottom: 1px solid #1c1f22;
+}
+.hy-qa summary::-webkit-details-marker { display: none; }
+.hy-qa summary::after { content: "＋"; float: right; color: #7f868d; font-size: 15px; }
+.hy-qa[open] summary::after { content: "－"; }
+.hy-qa p { margin: 0 0 22px; max-width: 720px; color: #98a1aa; font-size: 12px; line-height: 2; }
+
+@media (max-width: 980px) {
+  .hy-plans { grid-template-columns: repeat(2, 1fr); }
+  .hy-shots, .hy-steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .hy-plans { grid-template-columns: 1fr; }
+  .hy-price { font-size: 28px; }
+}
